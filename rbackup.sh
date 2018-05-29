@@ -27,7 +27,7 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/$HOME/bin:/$HOME/.bin"
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.1.0"
+readonly version="0.1.1"
 readonly signature="Copyright (C) 2018 Brainfuck"
 
 # Arguments, arguments num
