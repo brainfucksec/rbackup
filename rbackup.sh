@@ -27,7 +27,7 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/$HOME/bin:/$HOME/.bin"
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.1.1"
+readonly version="0.1.2"
 readonly signature="Copyright (C) 2018 Brainfuck"
 
 # Arguments, arguments num
@@ -206,7 +206,7 @@ main() {
 
     # Delete unnecessary backup files from current and /tmp directory
     rm -f "$filename.tar.gz"
-    rm -rf /tmp/"$filename.*"
+    rm -rf /tmp/backup-*
 
     # End
     printf "%s\\n" "$(date +'%Y/%m/%d %T') Program successfully terminated" >>"$log_file"
