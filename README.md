@@ -33,6 +33,11 @@ Start backup:
 rbackup --start
 ```
 
+Show help menù:
+```bash
+rbackup --help
+```
+
 You can use crontab for periodic backups.
 
 ## References:

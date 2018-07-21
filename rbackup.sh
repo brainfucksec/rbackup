@@ -22,12 +22,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# PATH Environment Variable, needed to avoid rsync errors
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/$HOME/bin:/$HOME/.bin"
-
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.1.2"
+readonly version="0.1.3"
 readonly signature="Copyright (C) 2018 Brainfuck"
 
 # Arguments, arguments num
@@ -83,19 +80,19 @@ check_settings() {
 
     # check configuration file
     if [[ ! -f "$config_file" ]]; then
-        printf "%s\\n" "Error: cannot load configuration file."
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: cannot load configuration file."
     exit 1
     fi
 
     # check exclude file
     if [[ ! -f "$exclude_file" ]]; then
-        printf "%s\\n" "Error: '$exclude_file' not exist."
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: '$exclude_file' not exist."
         exit 1
     fi
 
     # create backup directory if not exist
     if ! mkdir -pv "$backup_dir"; then
-        printf "%s\\n" "Error: cannot create directory for backups."
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: cannot create directory for backups."
         exit 1
     fi
 }
@@ -157,7 +154,7 @@ main() {
                --log-file="$log_file" \
                --exclude-from "$exclude_file" \
                "$source_dir" /tmp/"$filename"; then
-        printf "%s\\n" "Error: rsync backup failed." >>"$log_file"
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: rsync command failed." >>"$log_file"
         exit 1
     fi
 
@@ -168,7 +165,7 @@ main() {
     if tar -czf "$filename.tar.gz" "$filename"; then
         cp -f "$filename.tar.gz" "$backup_dir"
     else
-        printf "%s\\n" "Error: cannot create archive file." >>"$log_file"
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: cannot create archive file." >>"$log_file"
         exit 1
     fi
 
@@ -184,7 +181,7 @@ main() {
     cd "$backup_dir" || exit
 
     if ! gpg -e --cipher-algo AES256 -r "$user_id" "$filename.tar.gz"; then
-        printf "%s\\n" "Error: GPG encryption failed." >>"$log_file"
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: GPG encryption failed." >>"$log_file"
         exit 1
     fi
 
@@ -193,7 +190,7 @@ main() {
     if [[ -d "$external_dir_1" ]]; then
         cp "$filename.tar.gz.gpg" "$external_dir_1"
     else
-        printf "%s\\n" "Warning: No mounted volumes were found." >>"$log_file"
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') Warning: No mounted volumes were found." >>"$log_file"
     fi
 
     if [[ -d "$external_dir_2" ]]; then
@@ -240,4 +237,3 @@ while [ "$#" -gt 0 ]; do
             ;;
         esac
 done
-

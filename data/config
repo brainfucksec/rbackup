@@ -24,21 +24,21 @@ label =
 #
 # Directories or files to backup separated by space.  For directory
 # names do not enter the last slash "/"
-# i.e. '/home/username'.
+# e.g. '/home/username'.
 source_dir =
 
 # backup_dir = directory name
 #
 # Local directory where to put completed backups.  This is the
 # directory in your operating system where backups are saved
-# i.e. '/home/username/backups'.
+# e.g. '/home/username/backups'.
 backup_dir =
 
 # external_dir_x = external device directory
 #
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,
-# i.e. '/media/usb_device_name/backups'.  Leave empty the variables
+# e.g. '/media/usb_device_name/backups'.  Leave empty the variables
 # that are not needed.
 external_dir_1 =
 external_dir_2 =
