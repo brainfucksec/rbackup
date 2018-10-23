@@ -3,6 +3,7 @@
 # rbackup installation file
 #
 # install - install a program, script, or datafile
+# Don't run this script as a root!
 #
 # Copyright (C) 2018 Brainfuck
 #
@@ -14,7 +15,7 @@
 set -euo pipefail
 
 PROG_NAME="rbackup"
-VERSION="0.1.3"
+VERSION="0.1.4"
 PROG_DIR="$HOME/bin"
 DATA_DIR="$HOME/.config"
 
@@ -23,4 +24,3 @@ mkdir -pv "$PROG_DIR"
 mkdir -pv "$DATA_DIR/$PROG_NAME"
 install -Dm644 -v data/* "$DATA_DIR/$PROG_NAME"
 install -Dm755 -v rbackup.sh "$PROG_DIR/$PROG_NAME"
-

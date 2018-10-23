@@ -24,10 +24,10 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.1.3"
+readonly version="0.1.4"
 readonly signature="Copyright (C) 2018 Brainfuck"
 
-# Arguments, arguments num
+# Initialize arguments
 readonly args="$*"
 readonly argnum="$#"
 
@@ -40,9 +40,9 @@ readonly config_dir="$HOME/.config/$prog_name/"
 # Load configuration file `~/.config/rbackup/config`
 readonly config_file="$config_dir/config"
 
-## Configuration file values
-# gpg uid for encryption
-readonly user_id=$(awk '/^user_id/{print $3}' "${config_file}")
+## Read configuration file values
+# GPG UID for file encryption
+readonly gpg_uid=$(awk '/^gpg_uid/{print $3}' "${config_file}")
 
 # Backup file name (label)
 readonly label=$(awk '/^label/{print $3}' "${config_file}")
@@ -54,15 +54,15 @@ readonly source_dir=$(awk '/^source_dir/{print $3}' "${config_file}")
 readonly backup_dir=$(awk '/^backup_dir/{print $3}' "${config_file}")
 
 # Directories in the external volumes to copy new backups
-readonly external_dir_1=$(awk '/^external_dir_1/{print $3}' "${config_file}")
-readonly external_dir_2=$(awk '/^external_dir_2/{print $3}' "${config_file}")
-readonly external_dir_3=$(awk '/^external_dir_3/{print $3}' "${config_file}")
+readonly ext_dir_1=$(awk '/^ext_dir_1/{print $3}' "${config_file}")
+readonly ext_dir_2=$(awk '/^ext_dir_2/{print $3}' "${config_file}")
+readonly ext_dir_3=$(awk '/^ext_dir_3/{print $3}' "${config_file}")
 ## End of configuration file values
 
 # rsync exclude file
 readonly exclude_file="$config_dir/excluderc"
 
-# log file
+# program log file
 readonly log_file="$backup_dir/rbackup-$current_date.log"
 
 
@@ -131,26 +131,25 @@ main() {
 
     printf "%s\\n" "$(date +'%Y/%m/%d %T') Backup started" >>"$log_file"
 
-    # Backup with rsync
+    # Backup with rsync:
     #
-    # parameters: -rptzhvv --progress --delete --log-file=<file> --exclude-file=<file>
+    # parameters: -azhvv --progress --delete --log-file=<file> --exclude-file=<file>
     #
-    # -r, --recursive       recurse into directories
-    # -p, --perms           preserve permissions
-    # -t, --times           preserve modification times
-    # -z, --compress        compress file data during the transfer
-    # -h, --human-readable  output numbers in a human-readable format
-    # -v, --verbose         increase verbosity
-    # --progress            show progress during transfer
-    # --delete              delete extraneous files from destination dirs
-    # --log-file=FILE       log what we're doing to the specified FILE
-    # --exclude-from=FILE   read exclude patterns from FILE
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -z, --compress              compress file data during the transfer
+    # -h, --human-readable        output numbers in a human-readable format
+    # -v, --verbose               increase verbosity
+    # --progress                  show progress during transfer
+    # --delete                    delete extraneous files from destination dirs
+    # --log-file=FILE             log what we're doing to the specified FILE
+    # --exclude-from=FILE         read exclude patterns from FILE
     #
-    # rsync -h | man rsync for more information
+    # rsync --help | man rsync for more information
 
+    # set current backup filename
     local filename="backup-$label-$current_date"
 
-    if ! rsync -rptzhvv --progress --delete \
+    if ! rsync -azhvv --progress --delete \
                --log-file="$log_file" \
                --exclude-from "$exclude_file" \
                "$source_dir" /tmp/"$filename"; then
@@ -177,28 +176,28 @@ main() {
     # --cipher-algo <name>      Use <name> as cipher algorithm
     # -r, --recipient <name>    Encrypt for user id <name>
     #
-    # gpg -h | man gpg for more information
+    # gpg --help | man gpg for more information
     cd "$backup_dir" || exit
 
-    if ! gpg -e --cipher-algo AES256 -r "$user_id" "$filename.tar.gz"; then
+    if ! gpg -e --cipher-algo AES256 -r "$gpg_uid" "$filename.tar.gz"; then
         printf "%s\\n" "$(date +'%Y/%m/%d %T') Error: GPG encryption failed." >>"$log_file"
         exit 1
     fi
 
     # Copy encrypted backup to the external volume/s directories
     # if they exist
-    if [[ -d "$external_dir_1" ]]; then
-        cp "$filename.tar.gz.gpg" "$external_dir_1"
+    if [[ -d "$ext_dir_1" ]]; then
+        cp "$filename.tar.gz.gpg" "$ext_dir_1"
     else
-        printf "%s\\n" "$(date +'%Y/%m/%d %T') Warning: No mounted volumes were found." >>"$log_file"
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') No external volumes were found, skipping..." >>"$log_file"
     fi
 
-    if [[ -d "$external_dir_2" ]]; then
-        cp "$filename.tar.gz.gpg" "$external_dir_2"
+    if [[ -d "$ext_dir_2" ]]; then
+        cp "$filename.tar.gz.gpg" "$ext_dir_2"
     fi
 
     if [[ -d "$external_dir_3" ]]; then
-        cp "$filename.tar.gz.gpg" "$external_dir_3"
+        cp "$filename.tar.gz.gpg" "$ext_dir_3"
     fi
 
     # Delete unnecessary backup files from current and /tmp directory
@@ -212,7 +211,7 @@ main() {
 
 
 # Parse command line options
-if [ "$#" == "0" ]; then
+if [ "$#" -eq 0 ]; then
     usage
     exit 1
 fi
@@ -231,9 +230,9 @@ while [ "$#" -gt 0 ]; do
             main
             ;;
         -- | -* | *)
-            printf "%s\\n" "Error: invalid option '$1'!" >&2
+            printf "%s\\n" ""$prog_name": Invalid option '$1'!"
             printf "%s\\n" "Try '$prog_name --help' for more information."
             exit 1
             ;;
-        esac
+    esac
 done
