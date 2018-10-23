@@ -10,21 +10,25 @@
 
 # user_id = gpg user-id
 #
-# gpg user-id (uid) used for file encryption.
-user_id =
+# gpg user-id (UID) used for file encryption.
+gpg_uid =
 
-# label = filename
+# label = name
 #
-# File name (label) for backups, i.e. name of the operating system,
-# this value is inserted between 'backup' and current date.
-# e.g. 'backup-label_name-2018-05-26'.
+# Name (label) for backups, i.e. name of the operating system,
+# this value it becomes part of the filename.
+# Filename format: 'backup-<labelname_here>-YYYY-mm-dd'.
 label =
 
+## Directories
+#
+# Important: To respect rsync convention, DO NOT enter the last slash "/" after
+# folder names.
+# Correct format -> '/home/username'
+#
 # source_dir = directory name
 #
-# Directories or files to backup separated by space.  For directory
-# names do not enter the last slash "/"
-# e.g. '/home/username'.
+# Directories or files to backup separated by space.
 source_dir =
 
 # backup_dir = directory name
@@ -38,8 +42,8 @@ backup_dir =
 #
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,
-# e.g. '/media/usb_device_name/backups'.  Leave empty the variables
+# e.g. '/media/username/usb_device_name/backups'.  Leave empty the variables
 # that are not needed.
-external_dir_1 =
-external_dir_2 =
-external_dir_3 =
+ext_dir_1 =
+ext_dir_2 =
+ext_dir_3 =
