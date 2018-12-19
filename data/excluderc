@@ -1,5 +1,21 @@
+# rsync exclude patterns, related to `--exclude-from=FILE` option
+#
+# insert below exclude patterns (one per line)
+# read `man rsync` for other information
+
+# file and folders that should not be included in rsync backups:
 backups/
-Downloads/
-.thumbnails/
-.cache/
 .bash_history
+.cache
+
+# examples of exclude patterns
+Downloads/
+Desktop/
+.dbus/
+.gvfs/
+.local/share/gvfs-metadata/
+.local/share/Trash/
+.python_history
+*.pid
+.thumbnails/
+*.tmp

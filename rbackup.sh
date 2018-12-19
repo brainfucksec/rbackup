@@ -2,7 +2,7 @@
 
 # rbackup
 #
-# Shell script for encrypted backups with rsync and GnuPG
+# Shell script for make encrypted backups with rsync and GnuPG
 #
 # Copyright (C) 2018 Brainfuck
 
@@ -24,7 +24,7 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.1.4"
+readonly version="0.1.5"
 readonly signature="Copyright (C) 2018 Brainfuck"
 
 # Initialize arguments
@@ -40,7 +40,8 @@ readonly config_dir="$HOME/.config/$prog_name/"
 # Load configuration file `~/.config/rbackup/config`
 readonly config_file="$config_dir/config"
 
-## Read configuration file values
+# Configuration file values
+#--------------------------
 # GPG UID for file encryption
 readonly gpg_uid=$(awk '/^gpg_uid/{print $3}' "${config_file}")
 
@@ -57,7 +58,8 @@ readonly backup_dir=$(awk '/^backup_dir/{print $3}' "${config_file}")
 readonly ext_dir_1=$(awk '/^ext_dir_1/{print $3}' "${config_file}")
 readonly ext_dir_2=$(awk '/^ext_dir_2/{print $3}' "${config_file}")
 readonly ext_dir_3=$(awk '/^ext_dir_3/{print $3}' "${config_file}")
-## End of configuration file values
+# End of configuration file values
+#---------------------------------
 
 # rsync exclude file
 readonly exclude_file="$config_dir/excluderc"
@@ -66,7 +68,7 @@ readonly exclude_file="$config_dir/excluderc"
 readonly log_file="$backup_dir/rbackup-$current_date.log"
 
 
-# Check settings
+# Check program settings
 check_settings() {
     # check dependencies
     declare -a dependencies=('rsync' 'gpg');
@@ -157,7 +159,7 @@ main() {
         exit 1
     fi
 
-    # Compress the backup into a tar.gz archive and copy it to the
+    # Compress the backup into a tar/gzip (tar.gz) archive and copy it to the
     # backup folder
     cd /tmp/ || exit
 
