@@ -1,7 +1,7 @@
 # rbackup
 
 rbackup is a shell script for make encrypted backups with rsync and GnuPG.
-This program is created for use by users of the system, here because the program configuration is based on user the home folder (i.e. /home/username/).
+This program is created for use by users of the system, here because the program configuration is based on user home folder (i.e. /home/username/).
 
 Before using this script you need to know how to use [rsync](https://rsync.samba.org) and [gpg](https://gnupg.org).
 
