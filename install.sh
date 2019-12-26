@@ -15,7 +15,7 @@
 set -euo pipefail
 
 PROG_NAME="rbackup"
-VERSION="0.2.0"
+VERSION="0.3.0"
 PROG_DIR="$HOME/bin"
 DATA_DIR="$HOME/.config"
 

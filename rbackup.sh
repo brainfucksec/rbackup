@@ -24,7 +24,7 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.2.0"
+readonly version="0.3.0"
 readonly signature="Copyright (C) 2018-2019 Brainfuck"
 
 # Initialize arguments
@@ -127,7 +127,7 @@ EOF
 
 
 # Start program
-main() {
+start_backup() {
     check_settings
 
     printf "%s\\n" "$(date +'%Y/%m/%d %T') Backup started" >>"$log_file"
@@ -211,29 +211,33 @@ main() {
 }
 
 
-# Parse command line options
-if [ "$#" -eq 0 ]; then
-    usage
-    exit 1
-fi
+# Parse command line arguments and start program
+main() {
+    if [[ "$#" -eq 0 ]]; then
+        usage
+        exit 1
+    fi
 
-while [ "$#" -gt 0 ]; do
-    case "$1" in
-        -h | --help)
-            usage
-            exit 0
-            ;;
-        -v | --version)
-            show_version
-            exit 0
-            ;;
-        -s | --start)
-            main
-            ;;
-        -- | -* | *)
-            printf "%s\\n" ""$prog_name": Invalid option '$1'!"
-            printf "%s\\n" "Try '$prog_name --help' for more information."
-            exit 1
-            ;;
-    esac
-done
+    while [[ "$#" -gt 0 ]]; do
+        case "$1" in
+            -h | --help)
+                usage
+                exit 0
+                ;;
+            -v | --version)
+                show_version
+                exit 0
+                ;;
+            -s | --start)
+                start_backup
+                ;;
+            -- | -* | *)
+                printf "%s\\n" ""$prog_name": Invalid option '$1'!"
+                printf "%s\\n" "Try '$prog_name --help' for more information."
+                exit 1
+                ;;
+        esac
+    done
+}
+
+main "$@"

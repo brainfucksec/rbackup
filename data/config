@@ -33,8 +33,8 @@ backup_dir =
 
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,
-# e.g. '/media/username/usb_device_name/backups'.  Leave empty the variables
-# that are not needed.
+# e.g. "/media/username/usb_device_name/backups".
+# Leave empty the variables that are not needed.
 ext_dir_1 =
 ext_dir_2 =
 ext_dir_3 =
