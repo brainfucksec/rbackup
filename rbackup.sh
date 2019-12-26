@@ -4,7 +4,7 @@
 #
 # Shell script for make encrypted backups with rsync and GnuPG
 #
-# Copyright (C) 2018 Brainfuck
+# Copyright (C) 2018-2019 Brainfuck
 
 # GNU GENERAL PUBLIC LICENSE
 #
@@ -24,8 +24,8 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.1.5"
-readonly signature="Copyright (C) 2018 Brainfuck"
+readonly version="0.2.0"
+readonly signature="Copyright (C) 2018-2019 Brainfuck"
 
 # Initialize arguments
 readonly args="$*"
@@ -40,8 +40,8 @@ readonly config_dir="$HOME/.config/$prog_name/"
 # Load configuration file `~/.config/rbackup/config`
 readonly config_file="$config_dir/config"
 
-# Configuration file values
-#--------------------------
+# Configuration file values:
+#
 # GPG UID for file encryption
 readonly gpg_uid=$(awk '/^gpg_uid/{print $3}' "${config_file}")
 
@@ -59,7 +59,6 @@ readonly ext_dir_1=$(awk '/^ext_dir_1/{print $3}' "${config_file}")
 readonly ext_dir_2=$(awk '/^ext_dir_2/{print $3}' "${config_file}")
 readonly ext_dir_3=$(awk '/^ext_dir_3/{print $3}' "${config_file}")
 # End of configuration file values
-#---------------------------------
 
 # rsync exclude file
 readonly exclude_file="$config_dir/excluderc"

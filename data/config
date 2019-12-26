@@ -1,45 +1,36 @@
 # rbackup configuration file
 #
-# See 'man rsync', or https://rsync.samba.org/
+# See "man rsync", or https://rsync.samba.org/
 # for more information you can use this file.
 #
-# rbackup look for this file in '$HOME/.config/rbackup/'
-# See 'README.md'
+# rbackup look for this file in "$HOME/.config/rbackup/"
+# See "README.md"
 #
-# format: entry = value
+# Configuration options format: entry = value
 
-# user_id = gpg user-id
-#
+
 # gpg user-id (UID) used for file encryption.
 gpg_uid =
 
-# label = name
-#
 # Name (label) for backups, i.e. name of the operating system,
 # this value it becomes part of the filename.
-# Filename format: 'backup-<labelname_here>-YYYY-mm-dd'.
+# Filename format: "backup-<label>-YYYY-mm-dd".
 label =
 
-## Directories
+# Directories:
 #
 # Important: To respect rsync convention, DO NOT enter the last slash "/" after
 # folder names.
-# Correct format -> '/home/username'
-#
-# source_dir = directory name
+# Correct format: "/home/username"
 #
 # Directories or files to backup separated by space.
 source_dir =
 
-# backup_dir = directory name
-#
 # Local directory where to put completed backups.  This is the
 # directory in your operating system where backups are saved
-# e.g. '/home/username/backups'.
+# e.g. "/home/username/backups".
 backup_dir =
 
-# external_dir_x = external device directory
-#
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,
 # e.g. '/media/username/usb_device_name/backups'.  Leave empty the variables
