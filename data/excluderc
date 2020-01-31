@@ -4,13 +4,13 @@
 # read `man rsync` for other information
 
 # file and folders that should not be included in rsync backups:
-backups/
 .bash_history
-.cache
+.cache/
 
 # examples of exclude patterns
 Downloads/
 Desktop/
+.backups
 .dbus/
 .gvfs/
 .local/share/gvfs-metadata/

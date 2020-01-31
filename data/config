@@ -1,7 +1,7 @@
 # rbackup configuration file
 #
 # See "man rsync", or https://rsync.samba.org/
-# for more information you can use this file.
+# for more information how you can use this file.
 #
 # rbackup look for this file in "$HOME/.config/rbackup/"
 # See "README.md"
@@ -28,7 +28,7 @@ source_dir =
 
 # Local directory where to put completed backups.  This is the
 # directory in your operating system where backups are saved
-# e.g. "/home/username/backups".
+# e.g. "/home/username/.backups".
 backup_dir =
 
 # Directory in the external volumes to copy the backups.

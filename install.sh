@@ -5,7 +5,7 @@
 # install - install a program, script, or datafile
 # Don't run this script as a root!
 #
-# Copyright (C) 2018-2019 Brainfuck
+# Copyright (C) 2018-2020 Brainfuck
 #
 # This script is compatible with the BSD install script, but was written
 # from scratch.  It can only install one file at a time, a restriction
@@ -15,7 +15,7 @@
 set -euo pipefail
 
 PROG_NAME="rbackup"
-VERSION="0.3.0"
+VERSION="0.4.0"
 PROG_DIR="$HOME/bin"
 DATA_DIR="$HOME/.config"
 
