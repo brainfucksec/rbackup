@@ -10,7 +10,7 @@
 # examples of exclude patterns
 Downloads/
 Desktop/
-.backups
+.backups/
 .dbus/
 .gvfs/
 .local/share/gvfs-metadata/

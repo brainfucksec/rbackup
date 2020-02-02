@@ -27,7 +27,7 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.4.0"
+readonly version="0.4.1"
 readonly signature="Copyright (C) 2018-2020 Brainfuck"
 
 # Initialize arguments
@@ -204,7 +204,7 @@ start_backup() {
     if [[ -d "${ext_dir_1}" ]]; then
         cp "${filename}.tar.gz.gpg" "${ext_dir_1}"
     else
-        die "No external volumes were found, skipping..."
+        printf "%s\\n" "$(date +'%Y/%m/%d %T') No external volumes were found, skipping..." >>"${log_file}"
     fi
 
     if [[ -d "${ext_dir_2}" ]]; then
