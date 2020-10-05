@@ -14,12 +14,14 @@ chmod +x install.sh
 ./install.sh
 ```
 
+
 ## Configuration
 To encrypt your backups you need a valid [gpg key](https://www.gnupg.org/gph/en/manual/c14.html#AEN25)
 
 Edit file `~/.config/rbackup/config` with your settings for backups (i.e. user data, directories and files to backup), this file is widely commented.
 
 Edit file `~/.config/rbackup/excluderc` with the directories and files to be excluded from the backup, this is the rsync parameter `--exclude-from=FILE`, read the relative entry on rsync manual for more information.
+
 
 ## Usage
 Start backup:

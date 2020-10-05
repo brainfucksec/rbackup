@@ -27,18 +27,19 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.4.1"
+readonly version="0.5.0"
 readonly signature="Copyright (C) 2018-2020 Brainfuck"
 
 # Initialize arguments
 readonly args="$*"
 readonly argnum="$#"
 
-# Date in format: YYYY-mm-dd
-readonly current_date="$(date +'%Y-%m-%d')"
+# Date in format: `YYYY/mm/dd H:M:S`
+# This date format is used for entries in the log file
+readonly current_date="$(date +'%Y/%m/%d %T')"
 
 # Directory of configuration files
-readonly config_dir="$HOME/.config/${prog_name}/"
+readonly config_dir="${HOME}/.config/${prog_name}"
 
 # Load configuration file `~/.config/rbackup/config`
 readonly config_file="${config_dir}/config"
@@ -58,16 +59,18 @@ readonly source_dir=$(awk '/^source_dir/{print $3}' "${config_file}")
 readonly backup_dir=$(awk '/^backup_dir/{print $3}' "${config_file}")
 
 # Directories in the external volumes to copy new backups
-readonly ext_dir_1=$(awk '/^ext_dir_1/{print $3}' "${config_file}")
-readonly ext_dir_2=$(awk '/^ext_dir_2/{print $3}' "${config_file}")
-readonly ext_dir_3=$(awk '/^ext_dir_3/{print $3}' "${config_file}")
+readonly extdir_1=$(awk '/^extdir_1/{print $3}' "${config_file}")
+readonly extdir_2=$(awk '/^extdir_2/{print $3}' "${config_file}")
+readonly extdir_3=$(awk '/^extdir_3/{print $3}' "${config_file}")
 # End of configuration file values
 
+# Program files:
+#
 # rsync exclude file
 readonly exclude_file="${config_dir}/excluderc"
 
-# program log file
-readonly log_file="${backup_dir}/rbackup-${current_date}.log"
+# log file
+readonly log_file="${backup_dir}/rbackup-$(date +'%Y-%m-%d').log"
 
 
 # ===================================================================
@@ -75,7 +78,8 @@ readonly log_file="${backup_dir}/rbackup-${current_date}.log"
 # occurs
 # ===================================================================
 die() {
-    printf "%s\\n" $(date +'%Y/%m/%d %T') "$@" >>"${log_file}"
+    # errors and exit statuses will be written to `log_file`
+    printf "%s\\n" "${current_date} $@" >>"${log_file}"
     exit 1
 }
 
@@ -147,28 +151,35 @@ EOF
 start_backup() {
     check_settings
 
-    printf "%s\\n" "$(date +'%Y/%m/%d %T') Backup started" >>"${log_file}"
+
+    # Print information messages on log file
+    printf "%s\\n" "${current_date} Backup started" >>"${log_file}"
+
+    printf "%s\\n" "Source directory: ${source_dir}" >>"${log_file}"
+    printf "%s\\n" "Backup directory: ${backup_dir}" >>"${log_file}"
+
 
     # Backup with rsync:
     #
-    # parameters: -azzhvv --progress --delete --log-file=<file> --exclude-file=<file>
+    # parameters: -azhv --progress --delete --log-file=<file> --exclude-file=<file>
     #
-    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
-    # -z, --compress              compress file data during the transfer
-    # -h, --human-readable        output numbers in a human-readable format
-    # -v, --verbose               increase verbosity
-    # --progress                  show progress during transfer
-    # --delete                    delete extraneous files from destination dirs
-    # --log-file=FILE             log what we're doing to the specified FILE
-    # --exclude-from=FILE         read exclude patterns from FILE
+    # --archive, -a            archive mode; equals -rlptgoD (no -H,-A,-X)
+    # --compress, -z           compress file data during the transfer
+    # --human-readable, -h     output numbers in a human-readable format
+    # --verbose, -v            increase verbosity
+    # --progress               show progress during transfer
+    # --delete                 delete extraneous files from dest dirs
+    # --log-file=FILE          log what we're doing to the specified FILE
+    # --exclude-from=FILE      read exclude patterns from FILE
     #
     # rsync --help | man rsync for more information
 
     # set current backup filename
-    local filename="backup-${label}-${current_date}"
+    # for the filenames the date format is `YYYY-mm-dd`
+    local filename="backup-${label}-$(date +'%Y-%m-%d')"
 
     # exec rsync command
-    if ! rsync -azzhvv --progress --delete --log-file="${log_file}" \
+    if ! rsync -azhv --progress --delete --log-file="${log_file}" \
                --exclude-from "${exclude_file}" \
                "${source_dir}" /tmp/"${filename}"; then
         die "Error: rsync command failed."
@@ -200,19 +211,19 @@ start_backup() {
     fi
 
     # Copy encrypted backup to the external volume/s directories
-    # if they exist
-    if [[ -d "${ext_dir_1}" ]]; then
-        cp "${filename}.tar.gz.gpg" "${ext_dir_1}"
+    # if they exists
+    if [[ -d "${extdir_1}" ]]; then
+        cp "${filename}.tar.gz.gpg" "${extdir_1}"
     else
-        printf "%s\\n" "$(date +'%Y/%m/%d %T') No external volumes were found, skipping..." >>"${log_file}"
+        printf "%s\\n" "${current_date} No external volumes were found, skipping..." >>"${log_file}"
     fi
 
-    if [[ -d "${ext_dir_2}" ]]; then
-        cp "${filename}.tar.gz.gpg" "${ext_dir_2}"
+    if [[ -d "${extdir_2}" ]]; then
+        cp "${filename}.tar.gz.gpg" "${extdir_2}"
     fi
 
-    if [[ -d "${external_dir_3}" ]]; then
-        cp "${filename}.tar.gz.gpg" "${ext_dir_3}"
+    if [[ -d "${extdir_3}" ]]; then
+        cp "${filename}.tar.gz.gpg" "${extdir_3}"
     fi
 
     # Delete unnecessary backup files from current and /tmp directory
@@ -220,7 +231,7 @@ start_backup() {
     rm -rf /tmp/backup-*
 
     # End
-    printf "%s\\n" "$(date +'%Y/%m/%d %T') Program successfully terminated" >>"${log_file}"
+    printf "%s\\n" "${current_date} Program successfully terminated" >>"${log_file}"
     exit 0
 }
 
