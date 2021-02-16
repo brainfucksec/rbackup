@@ -1,4 +1,4 @@
-# rbackup configuration file
+# rbackup configuration file EXAMPLE FILE
 #
 # rbackup look for this file in "$HOME/.config/rbackup/"
 # See "README.md" and "config.example".
@@ -10,12 +10,12 @@
 
 
 # gpg user-id (UID) used for file encryption.
-gpg_uid =
+gpg_uid = user1
 
 # Name (label) for backups, i.e. name of the operating system, this value it
 # becomes filename suffix.
 # Filename format: "<label>-YYYY-mm-dd".
-label =
+label = arch-linux
 
 # Directories:
 #
@@ -24,16 +24,16 @@ label =
 # See related entry in "man rsync".
 #
 # Directories or files to backup separated by space.
-source_dir =
+source_dir = /home/user1
 
 # Local directory where to put completed backups.  This is the directory in
 # your operating system where backups are saved.
 # e.g. "/home/username/.backups".
-backup_dir =
+backup_dir = /home/user1/.backups
 
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,
 # e.g. "/media/username/usb_device_name/backups".  Leave empty the variables
 # that are not needed.
-extdir_1 =
-extdir_2 =
+extdir_1 = /media/user1/hdd1_external/backups
+extdir_2 = /media/user1/hdd2_external/backups

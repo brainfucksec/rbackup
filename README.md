@@ -1,9 +1,9 @@
 # rbackup
 
 rbackup is a shell script for make encrypted backups with rsync and GnuPG.
-This program is created for use by users of the system, here because the program configuration is based on user home folder (i.e. /home/username/).
+This program is created for users of the system, here because the program configuration is based on user home folder (i.e. /home/username/).
 
-Before using this script you need to know how to use [rsync](https://rsync.samba.org) and [gpg](https://gnupg.org).
+Before using this script you need to install (and know) [rsync](https://rsync.samba.org) and [gpg](https://gnupg.org).
 
 
 ## Install
@@ -18,9 +18,11 @@ chmod +x install.sh
 ## Configuration
 To encrypt your backups you need a valid [gpg key](https://www.gnupg.org/gph/en/manual/c14.html#AEN25)
 
-Edit file `~/.config/rbackup/config` with your settings for backups (i.e. user data, directories and files to backup), this file is widely commented.
+Edit file `~/.config/rbackup/config` with your backup settings (i.e. user data, directories and files to backup), this file is widely commented.
 
 Edit file `~/.config/rbackup/excluderc` with the directories and files to be excluded from the backup, this is the rsync parameter `--exclude-from=FILE`, read the relative entry on rsync manual for more information.
+
+Anyway, in the `/data/examples` folder you will find examples of these files.
 
 
 ## Usage

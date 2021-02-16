@@ -1,3 +1,5 @@
+# rsync exclude EXAMPLE FILE
+#
 # rsync exclude patterns, related to `--exclude-from=FILE` option
 #
 # rbackup look for this file in "$HOME/.config/rbackup"
