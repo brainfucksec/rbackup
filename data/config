@@ -29,7 +29,7 @@ source_dir =
 # Local directory where to put completed backups.  This is the directory in
 # your operating system where backups are saved.
 # e.g. "/home/username/.backups".
-backup_dir =
+dest_dir =
 
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,

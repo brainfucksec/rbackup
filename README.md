@@ -43,7 +43,7 @@ The better use for this script, is to put in on [crontab](https://www.pantz.org/
 
 * [rsync Official Website](https://rsync.samba.org)
 
-* [rsync - Linux Man Page](https://linux.die.net/man/1/rsync)
+* [rsync - Man Page](https://download.samba.org/pub/rsync/rsync.1)
 
 * [GnuPG Official Website](https://gnupg.org/)
 

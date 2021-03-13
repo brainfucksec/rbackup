@@ -21,7 +21,7 @@ label = arch-linux
 #
 # DO NOT enter the last slash "/" for copy entire folder
 # Correct format: "/home/username".
-# See related entry in "man rsync".
+# See "man rsync".
 #
 # Directories or files to backup separated by space.
 source_dir = /home/user1
@@ -29,7 +29,7 @@ source_dir = /home/user1
 # Local directory where to put completed backups.  This is the directory in
 # your operating system where backups are saved.
 # e.g. "/home/username/.backups".
-backup_dir = /home/user1/.backups
+dest_dir = /home/user1/.backups
 
 # Directory in the external volumes to copy the backups.
 # Must be the path of the volume mounted on /media directory,
