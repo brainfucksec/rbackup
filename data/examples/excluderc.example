@@ -7,7 +7,8 @@
 # for more information how you can use this file.
 
 
-# Files and folders that must not be included in rsync backups
+# Files and folders that must not be included in rsync backups.
+# Insert below exclude patterns (one per line).
 .backups/
 .cache/
 Desktop
@@ -19,5 +20,7 @@ downloads/
 .thumbnails/
 .bash_history
 *.tmp
+VirtualBox/
+Shared/
 
-# Insert below exclude patterns (one per line)
+
