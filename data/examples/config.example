@@ -1,39 +1,42 @@
-# rbackup configuration file EXAMPLE FILE
-#
-# rbackup look for this file in "$HOME/.config/rbackup/"
-# See "README.md" and "config.example".
-#
-# See "man rsync", or https://rsync.samba.org/
-# for more information how you can use this file.
-#
-# Configuration options format: entry = value
+## rbackup configuration file
+##
+## rbackup look for this file in "$HOME/.config/rbackup/"
+## See "README.md" and "config.example".
+##
+## rbackup is a "command wrapper" for rsync.
+## See "man rsync", or https://rsync.samba.org/
+## for more information how you can use this file.
+##
+## Configuration options format: entry = value
 
 
-# gpg user-id (UID) used for file encryption.
+## gpg user-id (UID) used for file encryption.
+## accept gpg UID names, e.g., username or username@email.com
 gpg_uid = user1
 
-# Name (label) for backups, i.e. name of the operating system, this value it
-# becomes filename suffix.
-# Filename format: "<label>-YYYY-mm-dd".
-label = arch-linux
+## Name (label) for backups, e.g., the name of the operating system,
+## this value it becomes filename suffix for the backup files.
+## Filename format: "<label>-YYYY-mm-dd".
+label = archlinux
 
-# Directories:
-#
-# DO NOT enter the last slash "/" for copy entire folder
-# Correct format: "/home/username".
-# See "man rsync".
-#
-# Directories or files to backup separated by space.
+## Directories or files to backup separated by space.
+## Note: to copy the whole directory do not enter the trailing space "/".
+## e.g.
+## /src /dest       -> copy the entire directory to destination.
+## /src/  /dest     -> copy directory content to destination.
+## /src/* /dest     -> same as above.
+## See: "man rsync" #USAGE
 source_dir = /home/user1
 
-# Local directory where to put completed backups.  This is the directory in
-# your operating system where backups are saved.
-# e.g. "/home/username/.backups".
+## Local directory where to put completed backups.
+## This is for example, the directory in your operating system $HOME where
+## backups are saved.
+## e.g., "/home/username/.backups".
 dest_dir = /home/user1/.backups
 
-# Directory in the external volumes to copy the backups.
-# Must be the path of the volume mounted on /media directory,
-# e.g. "/media/username/usb_device_name/backups".  Leave empty the variables
-# that are not needed.
-extdir_1 = /media/user1/hdd1_external/backups
-extdir_2 = /media/user1/hdd2_external/backups
+## Remote directory to copy the backups, i.e., external devices.
+## Must be the path of the volume mounted on "/run/media/" directory,
+## e.g., "/run/media/username/usb_device/backups".
+## Leave empty the variables that are not needed.
+extdir_1 = /run/media/user1/external_1/backups
+extdir_2 = /run/media/user1/external_2/backups

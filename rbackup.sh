@@ -6,7 +6,7 @@
 #
 # Shell script for make encrypted backups with rsync and GnuPG
 #
-# Copyright (C) 2018-2021 Brainf+ck
+# Copyright (C) 2018-2022 brainf+ck
 #
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -33,8 +33,8 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.7.0"
-readonly signature="Copyright (C) 2021 Brainf+ck"
+readonly version="0.8.0"
+readonly signature="Copyright (C) 2022 brainf+ck"
 
 # Date format used for entries in the log file: `YYYY/mm/dd H:M:S`
 readonly current_date="$(date +'%Y/%m/%d %T')"
@@ -66,11 +66,31 @@ readonly extdir_2=$(awk '/^extdir_2/{print $3}' "${config_file}")
 
 ## rsync settings:
 #
+# rsync --help | man rsync for more information
+#
 # exclude file
 readonly exclude_file="${config_dir}/excluderc"
 
 # log file
 readonly log_file="${dest_dir}/rbackup-$(date +'%Y-%m-%d').log"
+
+# options:
+#       --archive, -a            archive mode; equals -rlptgoD (no -H,-A,-X)
+#       --human-readable, -h     output numbers in a human-readable format
+#       --one-file-system, -x    don't cross filesystem boundaries
+#       --info=progress2         show total transfer progress
+#       --log-file=FILE          log what we're doing to the specified FILE
+#       --exclude-from=FILE      read exclude patterns from FILE
+#
+declare -a rsync_opts=(
+    "-ahx" \
+    "--info=progress2" \
+    "--log-file=${log_file}" \
+    "--exclude-from=${exclude_file}"
+)
+
+# Set backup filename (date format: `YYYY-mm-dd`)
+readonly fname="${label}-$(date +'%Y-%m-%d')"
 
 
 #######################################################################
@@ -79,7 +99,7 @@ readonly log_file="${dest_dir}/rbackup-$(date +'%Y-%m-%d').log"
 
 ## Error except: write a message in the log file and exit with (1)
 die() {
-    printf "%s\\n" "${current_date} $*" >>"${log_file}"
+    printf "%s\\n" "${current_date} Error: $*" >>"${log_file}"
     exit 1
 }
 
@@ -87,27 +107,27 @@ die() {
 ## Check program settings
 check_settings() {
     # check dependencies
-    declare -a dependencies=(rsync gpg);
+    declare -a depends=(rsync gpg);
 
-    for package in "${dependencies[@]}"; do
+    for package in "${depends[@]}"; do
         if ! hash "${package}" 2>/dev/null; then
-            die "[Error]: '${package}' is not installed."
+            die "${package} is not installed."
         fi
     done
 
     # check config file
     if [[ ! -f "${config_file}" ]]; then
-        die "[Error]: Cannot load configuration file."
+        die "Cannot load configuration file."
     fi
 
     # check exclude file
     if [[ ! -f "${exclude_file}" ]]; then
-        die "[Error]: '${exclude_file}' not exist."
+        die "${exclude_file} not exist."
     fi
 
     # create backup directory if not exist
     if ! mkdir -pv "${dest_dir}"; then
-        die "[Error]: Cannot create directory for backups."
+        die "Cannot create directory for backups."
     fi
 }
 
@@ -147,37 +167,16 @@ start_backup() {
     printf "%s\\n" "${current_date} Source directory: ${source_dir}" >>"${log_file}"
     printf "%s\\n" "${current_date} Destination directory: ${dest_dir}" >>"${log_file}"
 
-    # set current backup filename
-    # date format: `YYYY-mm-dd`
-    local filename="${label}-$(date +'%Y-%m-%d')"
-
-    # run rsync main command:
-    #
-    # --archive, -a            archive mode; equals -rlptgoD (no -H,-A,-X)
-    # --human-readable, -h     output numbers in a human-readable format
-    # --one-file-system, -x    don't cross filesystem boundaries
-    # --delete                 delete extraneous files from dest dirs
-    # --info=progress2         show total transfer progress
-    # --log-file=FILE          log what we're doing to the specified FILE
-    # --exclude-from=FILE      read exclude patterns from FILE
-    #
-    # rsync --help | man rsync for more information
-    if ! rsync \
-        -ahx \
-        --delete \
-        --info=progress2 \
-        --log-file="${log_file}" \
-        --exclude-from="${exclude_file}" \
-        "${source_dir}" "${dest_dir}/${filename}"; then
-
-        die "[Error]: rsync command failed."
+    # run rsync:
+    if ! rsync "${rsync_opts[@]}" "${source_dir}" "${dest_dir}/${fname}"; then
+        die "rsync command failed."
     fi
 
     # create tar/gzip archive
     cd "${dest_dir}" || exit
 
-    if ! tar -czf "${filename}.tar.gz" "${filename}"; then
-        die "[Error]: cannot create archive file."
+    if ! tar -czf "${fname}.tar.gz" "${fname}"; then
+        die "Cannot create archive file."
     fi
 
     # encrypt backup with gpg:
@@ -189,31 +188,26 @@ start_backup() {
     # -r, --recipient <name>    Encrypt for user id <name>
     #
     # gpg --help | man gpg for more information
-    if ! gpg -e --cipher-algo AES256 -r "${gpg_uid}" "${filename}.tar.gz"; then
-        die "[Error]: GnuPG encryption failed."
+    if ! gpg -e --cipher-algo AES256 -r "${gpg_uid}" "${fname}.tar.gz"; then
+        die "GnuPG encryption failed."
     fi
 
     # copy encrypted backup to external volume/s directories if they exists
     if [[ -d "${extdir_1}" ]]; then
-        cp "${filename}.tar.gz.gpg" "${extdir_1}"
+        cp "${fname}.tar.gz.gpg" "${extdir_1}"
     else
-        printf "%s\\n" "${current_date} [Warning]: External device not mounted" >>"${log_file}"
+        printf "%s\\n" "${current_date} Warning: External device not mounted" >>"${log_file}"
     fi
 
     if [[ -d "${extdir_2}" ]]; then
-        cp "${filename}.tar.gz.gpg" "${extdir_2}"
+        cp "${fname}.tar.gz.gpg" "${extdir_2}"
     fi
 
     # delete unencrypted files from current directory
-    if ! rm -rf "${filename}.tar.gz"; then
-        die "[Error]: Cannot remove ${filename}.tar.gz"
-    fi
+    rm -rf "${fname}.tar.gz"
+    rm -rf "${fname}"
 
-    if ! rm -rf "${filename}"; then
-	    die "[Error]: Cannot remove ${filename}"
-    fi
-
-    # end
+    # End
     printf "%s\\n" "${current_date} [ OK ] Program successfully terminated" >>"${log_file}"
     exit 0
 }
