@@ -1,7 +1,7 @@
 ## rbackup configuration file
 ##
 ## rbackup look for this file in "$HOME/.config/rbackup/"
-## See "README.md" and "config.example".
+## See "README.md".
 ##
 ## rbackup is a "command wrapper" for rsync.
 ## See "man rsync", or https://rsync.samba.org/

@@ -2,9 +2,10 @@
 
 #######################################################################
 #
-# rbackup
+# rbackup.sh
 #
-# Shell script for make encrypted backups with rsync and GnuPG
+# Shell script for make encrypted backups with rsync and GnuPG.
+# For the information please see the README.
 #
 # Copyright (C) 2018-2022 brainf+ck
 #
@@ -33,10 +34,10 @@
 
 # Program information
 readonly prog_name="rbackup"
-readonly version="0.8.0"
+readonly version="0.8.1"
 readonly signature="Copyright (C) 2022 brainf+ck"
 
-# Date format used for entries in the log file: `YYYY/mm/dd H:M:S`
+# Date format used for log file entries: `YYYY/mm/dd H:M:S`
 readonly current_date="$(date +'%Y/%m/%d %T')"
 
 # Config files directory
@@ -45,7 +46,7 @@ readonly config_dir="${HOME}/.config/${prog_name}"
 # Config file: `~/.config/rbackup/config`
 readonly config_file="${config_dir}/config"
 
-## Config file variables:
+#### Config file variables:
 #
 # gpg UID for file encryption
 readonly gpg_uid=$(awk '/^gpg_uid/{print $3}' "${config_file}")
@@ -62,7 +63,7 @@ readonly dest_dir=$(awk '/^dest_dir/{print $3}' "${config_file}")
 # external volumes directories for multiple copies
 readonly extdir_1=$(awk '/^extdir_1/{print $3}' "${config_file}")
 readonly extdir_2=$(awk '/^extdir_2/{print $3}' "${config_file}")
-## EOF config file
+#### EOF config file.
 
 ## rsync settings:
 #
@@ -99,7 +100,7 @@ readonly fname="${label}-$(date +'%Y-%m-%d')"
 
 ## Error except: write a message in the log file and exit with (1)
 die() {
-    printf "%s\\n" "${current_date} Error: $*" >>"${log_file}"
+    printf "%s\\n" "${current_date} [Error!] $*" >>"${log_file}"
     exit 1
 }
 
@@ -163,9 +164,9 @@ start_backup() {
     check_settings
 
     # print information messages on log file
-    printf "%s\\n" "${current_date} Backup started" >>"${log_file}"
-    printf "%s\\n" "${current_date} Source directory: ${source_dir}" >>"${log_file}"
-    printf "%s\\n" "${current_date} Destination directory: ${dest_dir}" >>"${log_file}"
+    printf "%s\\n" "${current_date} [Info] Backup started" >>"${log_file}"
+    printf "%s\\n" "${current_date} [Info] Source directory: ${source_dir}" >>"${log_file}"
+    printf "%s\\n" "${current_date} [Info] Destination directory: ${dest_dir}" >>"${log_file}"
 
     # run rsync:
     if ! rsync "${rsync_opts[@]}" "${source_dir}" "${dest_dir}/${fname}"; then
@@ -196,7 +197,7 @@ start_backup() {
     if [[ -d "${extdir_1}" ]]; then
         cp "${fname}.tar.gz.gpg" "${extdir_1}"
     else
-        printf "%s\\n" "${current_date} Warning: External device not mounted" >>"${log_file}"
+        printf "%s\\n" "${current_date} [Warning] External device not mounted" >>"${log_file}"
     fi
 
     if [[ -d "${extdir_2}" ]]; then
@@ -208,7 +209,7 @@ start_backup() {
     rm -rf "${fname}"
 
     # End
-    printf "%s\\n" "${current_date} [ OK ] Program successfully terminated" >>"${log_file}"
+    printf "%s\\n" "${current_date} [OK] Program successfully terminated" >>"${log_file}"
     exit 0
 }
 
