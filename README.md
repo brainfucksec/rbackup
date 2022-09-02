@@ -5,7 +5,7 @@
 rbackup is a shell script for making backup of your Linux system with rsync.
 Uses `tar gzip` for compression and [GnuPG](https://gnupg.org) for encryption.
 
-This program is a "wrapper" for rsync, then you need to familiarize first with this program, see: [rsync](https://rsync.samba.org), also you need a [gpg key]((https://www.gnupg.org/gph/en/manual/c14.html#AEN25) for encrypt the archives.
+This program is a "wrapper" for rsync, then you need to familiarize first with this program, see: [rsync](https://rsync.samba.org), also you need a [gpg key](https://www.gnupg.org/gph/en/manual/c14.html#AEN25) for encrypt the archives.
 
 ## Install
 
